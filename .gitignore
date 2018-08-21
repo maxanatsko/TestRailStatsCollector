@@ -12,5 +12,6 @@ env/
 env64/
 
 # Other files
-system_log.log
+*.log
 config.ini
+test_*
