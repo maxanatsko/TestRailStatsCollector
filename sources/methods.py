@@ -1,5 +1,5 @@
 import requests
-from config_reader import config as cr
+from sources.config_reader import config as cr
 import base64
 
 # Get data from config file

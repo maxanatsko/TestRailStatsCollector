@@ -1,6 +1,6 @@
 import datetime
 import telegram
-from config_reader import config as cr
+from sources.config_reader import config as cr
 
 # Get data from config file
 bot_token = cr.get('Telegram', 'bot_token')

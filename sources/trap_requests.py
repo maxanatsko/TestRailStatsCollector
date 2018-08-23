@@ -1,9 +1,8 @@
-import methods
-import file_writer
-from config_reader import config as cr
+from sources import methods, file_writer
+from sources.config_reader import config as cr
 import datetime
-from telegram_notifications import send_telegram_message as stm
-from logger import logger
+from sources.telegram_notifications import send_telegram_message as stm
+from sources.logger import logger
 
 stm("TestRail Stats Collector script started ▶")
 
@@ -17,10 +16,19 @@ try:
     logger.info('Finished reading config file')
 
     users = methods.get_users()
+    file_writer.write_data_to_file("users.json", users)
+
     projects = methods.get_projects()
+    file_writer.write_data_to_file("projects.json", projects)
+
     case_types = methods.get_case_types()
+    file_writer.write_data_to_file("case_types.json", case_types)
+
     statuses = methods.get_statuses()
+    file_writer.write_data_to_file("statuses.json", statuses)
+
     priorities = methods.get_priorities()
+    file_writer.write_data_to_file("priorities.json", priorities)
 
     print("{}: Finished getting users, projects, case types, statuses and priorities".format(datetime.datetime.now()))
     logger.info('Finished getting users, projects, case types, statuses and priorities')
@@ -29,18 +37,21 @@ try:
     project_id = [d for d in projects if d['name'] == "{}".format(project_name)][0]
     filtered_projects.append(project_id)
     templates = methods.get_templates(filtered_projects[0]["id"])  # available starting from v5 of TestRail
+    file_writer.write_data_to_file("templates.json", templates)
 
     print("{}: Getting milestones".format(datetime.datetime.now()))
     logger.info('Getting milestones')
     milestones = []
     for p in projects:
         milestones.append(methods.get_milestones(p["id"]))
+    file_writer.write_data_to_file("milestones.json", milestones)
 
     print("{}: Getting suites".format(datetime.datetime.now()))
     logger.info('Getting suites')
     suites = []
     for p in projects:
         suites.append(methods.get_suites(p["id"]))
+    file_writer.write_data_to_file("suites.json", suites)
 
     print("{}: Getting cases".format(datetime.datetime.now()))
     logger.info('Getting cases')
@@ -55,6 +66,8 @@ try:
             # sections = [{"id": 26676}]
             for section in sections_iteration:
                 cases.append(methods.get_cases(p["id"], s["id"], section["id"]))
+    file_writer.write_data_to_file("cases.json", cases)
+    file_writer.write_data_to_file("sections.json", sections)
 
     plans = methods.get_plans(filtered_projects[0]["id"])
 
@@ -72,6 +85,8 @@ try:
             for run in runs:
                 run_ids_from_plans.append(run[0]["id"])
                 run_ids_from_plans_set.add(run[0]["id"])
+    file_writer.write_data_to_file("plans.json", plans)
+
 
     print("{}: Getting runs".format(datetime.datetime.now()))
     logger.info('Getting runs')
@@ -81,6 +96,7 @@ try:
 
     runs_raw = methods.get_runs(filtered_projects[0]["id"])
     all_runs = [runs_from_plans, runs_raw]
+    file_writer.write_data_to_file("runs.json", all_runs)
 
     print("{}: Getting tests".format(datetime.datetime.now()))
     logger.info('Getting tests')
@@ -88,6 +104,7 @@ try:
     for runs in all_runs:
         for run in runs:
             tests.append(methods.get_tests(run["id"]))
+    file_writer.write_data_to_file("tests.json", tests)
 
     print("{}: Getting test results".format(datetime.datetime.now()))
     logger.info('Getting test results')
@@ -95,24 +112,7 @@ try:
     for lists_in_tests in tests:
         for list_in_lists in lists_in_tests:
             results.append(methods.get_results_for_test(list_in_lists["id"]))
-
-    # writing data to files
-    print("{}: Writing data to disk".format(datetime.datetime.now()))
-    logger.info('Writing data to disk')
-    file_writer.write_data_to_file("users.json",users)
-    file_writer.write_data_to_file("projects.json",projects)
-    file_writer.write_data_to_file("milestones.json",milestones)
-    file_writer.write_data_to_file("suites.json",suites)
-    file_writer.write_data_to_file("cases.json",cases)
-    file_writer.write_data_to_file("plans.json",plans)
-    file_writer.write_data_to_file("results.json",results)
-    file_writer.write_data_to_file("sections.json",sections)
-    file_writer.write_data_to_file("case_types.json",case_types)
-    file_writer.write_data_to_file("templates.json",templates)  # available starting from v5 of TestRail
-    file_writer.write_data_to_file("statuses.json",statuses)
-    file_writer.write_data_to_file("priorities.json",priorities)
-    file_writer.write_data_to_file("tests.json",tests)
-    file_writer.write_data_to_file("runs.json",all_runs)
+    file_writer.write_data_to_file("results.json", results)
 
     # finish timestamp in the log
     print("{}: All done!".format(datetime.datetime.now()))
