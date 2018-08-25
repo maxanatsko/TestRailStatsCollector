@@ -1,5 +1,5 @@
 import json
-from sources.config_reader import config as cr
+from config_reader import config as cr
 import os
 
 directory_path = cr.get('Results', 'directory_path')

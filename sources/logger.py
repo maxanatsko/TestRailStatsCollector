@@ -1,6 +1,6 @@
 import logging
 import argparse
-from sources.config_reader import config as cr
+from config_reader import config as cr
 
 # adding command-line arguments
 parser = argparse.ArgumentParser()

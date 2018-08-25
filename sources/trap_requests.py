@@ -1,8 +1,8 @@
-from sources import methods, file_writer
-from sources.config_reader import config as cr
+import methods, file_writer
+from config_reader import config as cr
 import datetime
-from sources.telegram_notifications import send_telegram_message as stm
-from sources.logger import logger
+from telegram_notifications import send_telegram_message as stm
+from logger import logger
 
 stm("TestRail Stats Collector script started ▶")
 
