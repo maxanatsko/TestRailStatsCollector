@@ -5,6 +5,7 @@ from telegram_notifications import send_telegram_message as stm
 from logger import logger
 
 stm("TestRail Stats Collector script started ▶")
+start_time = datetime.datetime.now()
 
 try:
     logger.info('Process Started')
@@ -51,7 +52,6 @@ try:
     suites = []
     for p in projects:
         suites.append(methods.get_suites(p["id"]))
-    file_writer.write_data_to_file("suites.json", suites)
 
     print("{}: Getting cases".format(datetime.datetime.now()))
     logger.info('Getting cases')
@@ -68,6 +68,7 @@ try:
                 cases.append(methods.get_cases(p["id"], s["id"], section["id"]))
     file_writer.write_data_to_file("cases.json", cases)
     file_writer.write_data_to_file("sections.json", sections)
+    file_writer.write_data_to_file("suites.json", suites)
 
     plans = methods.get_plans(filtered_projects[0]["id"])
 
@@ -115,7 +116,7 @@ try:
     file_writer.write_data_to_file("results.json", results)
 
     # finish timestamp in the log
-    print("{}: All done!".format(datetime.datetime.now()))
+    print("{}: All done in {} seconds!".format(datetime.datetime.now(), datetime.datetime.now() - start_time))
     logger.info('Process Finished')
     stm("TestRail Stats Collector  script finished successfully ✅")
 except:
