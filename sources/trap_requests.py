@@ -118,6 +118,6 @@ try:
     # finish timestamp in the log
     print("{}: All done in {} seconds!".format(datetime.datetime.now(), datetime.datetime.now() - start_time))
     logger.info('Process Finished')
-    stm("TestRail Stats Collector  script finished successfully ✅")
+    stm("TestRail Stats Collector  script finished successfully ✅. Completed in {} seconds".format(datetime.datetime.now() - start_time))
 except:
-    stm("TestRail Stats Collector  script terminated with error ⛔")
+    stm("TestRail Stats Collector  script terminated with error ⛔. Completed in {} seconds".format(datetime.datetime.now() - start_time))
