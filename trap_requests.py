@@ -51,6 +51,29 @@ def main():
                 plans = methods.get_plans(project_id)
                 file_writer.write_data_to_file("plans.json", plans)
 
+                # Fetching and writing cases data
+                for suite in suites:
+                    sections = methods.get_sections(project_id, suite['id'])
+                    for section in sections:
+                        cases = methods.get_cases(project_id, suite['id'], section['id'])
+                        file_writer.write_data_to_file(f"cases_suite_{suite['id']}_section_{section['id']}.json", cases)
+
+                # Fetching and writing runs data
+                runs = methods.get_runs(project_id)
+                file_writer.write_data_to_file("runs.json", runs)
+
+                # Fetching and writing tests and results for each run
+                for run in runs:
+                    tests = methods.get_tests(run['id'])
+                    file_writer.write_data_to_file(f"tests_run_{run['id']}.json", tests)
+                    results_for_run = methods.get_results_for_run(run['id'])
+                    file_writer.write_data_to_file(f"results_for_run_{run['id']}.json", results_for_run)
+
+                    # Fetching and writing results for each test
+                    for test in tests:
+                        results_for_test = methods.get_results_for_test(test['id'])
+                        file_writer.write_data_to_file(f"results_for_test_{test['id']}.json", results_for_test)
+
             end_time = datetime.datetime.now()
             duration = end_time - start_time
             logger.info(f'Process Finished in {duration}')
